@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ProductService } from './services/product.service';
 import { CurrencyService } from './services/currency.service';
 import { RealizationReportService } from './services/realization-report.service';
+import { ParseOrderService } from './services/parse-order.service';
 
 @Module({
   imports: [HttpModule],
@@ -14,6 +15,7 @@ import { RealizationReportService } from './services/realization-report.service'
     ProductService,
     CurrencyService,
     RealizationReportService,
+    ParseOrderService,
   ],
 })
 export class ReportModule {}
