@@ -5,7 +5,7 @@ import * as moment from 'moment';
 @Injectable()
 export class SaveReportService {
   save(reports) {
-    const date = moment().format('DD-MM-YYYY');
+    const date = moment().format('DD-MM-YYYY-HH:mm:ss');
 
     const fileName = `report-${date}.xlsx`;
 

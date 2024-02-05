@@ -10,8 +10,7 @@ import {
 import { ReportService } from './services/report.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
-import { join } from 'path';
-
+import { FileExistsPipe } from './pipes/file-exists.pipe';
 @Controller('report')
 export class ReportController {
   constructor(private reportService: ReportService) {}
@@ -36,8 +35,7 @@ export class ReportController {
   }
 
   @Get(':fileName')
-  getFile(@Param() params: any): StreamableFile {
-    const path = join(process.cwd(), 'src/output', params.fileName);
+  getFile(@Param('fileName', FileExistsPipe) path: string): StreamableFile {
     const file = createReadStream(path);
     return new StreamableFile(file);
   }
