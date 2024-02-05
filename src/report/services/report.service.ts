@@ -6,6 +6,7 @@ import { CurrencyService } from './currency.service';
 import { RealizationReportService } from './realization-report.service';
 import { ParseOrderService } from './parse-order.service';
 import { ContentService } from './content.service';
+import { SaveReportService } from './save-report.service';
 
 export interface ReportServiceCreate {
   fbo?: Express.Multer.File[];
@@ -23,6 +24,7 @@ export class ReportService {
     private realizationReportService: RealizationReportService,
     private parseOrderService: ParseOrderService,
     private contentService: ContentService,
+    private saveReportService: SaveReportService,
   ) {}
 
   async create({ fbo, fbs, report }: ReportServiceCreate) {
@@ -43,7 +45,7 @@ export class ReportService {
         return acc;
       }, {}),
       map((data: any) => {
-        return this.countries.map((countryName) => {
+        const reports = this.countries.map((countryName) => {
           return this.getReport(
             countryName,
             { fbo: data.fbo, fbs: data.fbs },
@@ -52,6 +54,8 @@ export class ReportService {
             data.products,
           );
         });
+        const fileName = this.saveReportService.save(reports);
+        return fileName;
       }),
     );
   }

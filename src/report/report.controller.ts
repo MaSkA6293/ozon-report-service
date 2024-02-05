@@ -1,11 +1,16 @@
 import {
   Controller,
+  Get,
+  Param,
   Post,
+  StreamableFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { ReportService } from './services/report.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Controller('report')
 export class ReportController {
@@ -28,5 +33,12 @@ export class ReportController {
     },
   ) {
     return this.reportService.create(files);
+  }
+
+  @Get(':fileName')
+  getFile(@Param() params: any): StreamableFile {
+    const path = join(process.cwd(), 'src/output', params.fileName);
+    const file = createReadStream(path);
+    return new StreamableFile(file);
   }
 }
