@@ -28,7 +28,7 @@ export class ParseOrderService {
     }
   }
 
-  retrieveOrders = (orders, countryName) => {
+  retrieveOrders = (orders, countryName, reportDate) => {
     return Object.keys(orders)
       .map((key) => {
         switch (key) {
@@ -79,13 +79,7 @@ export class ParseOrderService {
       .map((key) =>
         key.filter((order) => {
           const deliveryDate = moment(order['Дата доставки']);
-          const rangeStart = moment()
-            .subtract(1, 'months')
-            .set('date', 1)
-            .set('hour', 0)
-            .set('minute', 0)
-            .set('second', 0);
-
+          const rangeStart = moment(reportDate);
           if (deliveryDate >= rangeStart) {
             return true;
           }
@@ -94,18 +88,8 @@ export class ParseOrderService {
       .map((key) =>
         key.filter((order) => {
           const shipmentDate = moment(order['Дата отгрузки']);
-          const rangeStart = moment()
-            .subtract(1, 'months')
-            .set('date', 1)
-            .set('hour', 0)
-            .set('minute', 0)
-            .set('second', 0);
-
-          const rangeEnd = moment()
-            .set('date', 1)
-            .set('hour', 0)
-            .set('minute', 0)
-            .set('second', 0);
+          const rangeStart = moment(reportDate);
+          const rangeEnd = moment(reportDate).add(1, 'month');
 
           if (shipmentDate <= rangeEnd && shipmentDate >= rangeStart) {
             return true;

@@ -1,16 +1,14 @@
 import {
+  Body,
   Controller,
-  Get,
-  Param,
   Post,
-  StreamableFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { ReportService } from './services/report.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { createReadStream } from 'fs';
-import { FileExistsPipe } from './pipes/file-exists.pipe';
+import { CreateReportDto } from './dto/create-report.dto';
+import { TransformDatePipe } from './pipes/transform-date.pipe';
 @Controller('report')
 export class ReportController {
   constructor(private reportService: ReportService) {}
@@ -24,6 +22,7 @@ export class ReportController {
     ]),
   )
   create(
+    @Body(new TransformDatePipe()) createReportDto: CreateReportDto,
     @UploadedFiles()
     files: {
       fbo?: Express.Multer.File[];
@@ -31,12 +30,6 @@ export class ReportController {
       report?: Express.Multer.File[];
     },
   ) {
-    return this.reportService.create(files);
-  }
-
-  @Get(':fileName')
-  getFile(@Param('fileName', FileExistsPipe) path: string): StreamableFile {
-    const file = createReadStream(path);
-    return new StreamableFile(file);
+    return this.reportService.create(files, createReportDto.reportDate);
   }
 }

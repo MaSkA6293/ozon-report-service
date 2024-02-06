@@ -8,8 +8,8 @@ import { xml2js } from 'xml-js';
 export class CurrencyService {
   constructor(private http: HttpService) {}
 
-  public getCurrencyRange() {
-    const to = moment().format('DD/MM/YYYY');
+  public getCurrencyRange(reportDate: string) {
+    const to = moment(reportDate).format('DD/MM/YYYY');
     const from = moment().subtract(100, 'days').format('DD/MM/YYYY');
 
     const url = `https://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=${from}&date_req2=${to}&VAL_NM_RQ=R01235`;

@@ -27,14 +27,14 @@ export class ReportService {
     private saveReportService: SaveReportService,
   ) {}
 
-  async create({ fbo, fbs, report }: ReportServiceCreate) {
+  async create({ fbo, fbs, report }: ReportServiceCreate, reportDate: string) {
     const realizationReport = this.realizationReportService.parse(report);
 
     const parseOrderService = await this.parseOrderService.parse(fbo, fbs);
 
     return concat(
       this.productService.getAllProducts(),
-      this.currencyService.getCurrencyRange(),
+      this.currencyService.getCurrencyRange(reportDate),
       of(realizationReport),
       of(parseOrderService),
     ).pipe(
@@ -45,23 +45,35 @@ export class ReportService {
         return acc;
       }, {}),
       map((data: any) => {
-        const reports = this.countries.map((countryName) => {
+        return this.countries.map((countryName) => {
           return this.getReport(
             countryName,
             { fbo: data.fbo, fbs: data.fbs },
             data.realizationReport,
             data.currencyRange,
             data.products,
+            reportDate,
           );
         });
-        const fileName = this.saveReportService.save(reports);
-        return fileName;
+        //   const fileName = this.saveReportService.save(reports);
+        //     return fileName;
       }),
     );
   }
 
-  getReport(countryName, orders, realizationReport, range, products) {
-    const entries = this.parseOrderService.retrieveOrders(orders, countryName);
+  getReport(
+    countryName,
+    orders,
+    realizationReport,
+    range,
+    products,
+    reportDate,
+  ) {
+    const entries = this.parseOrderService.retrieveOrders(
+      orders,
+      countryName,
+      reportDate,
+    );
 
     const content = this.contentService.getContent(
       entries,
