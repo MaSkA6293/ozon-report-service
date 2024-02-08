@@ -1,14 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as xlsx from 'xlsx';
-import * as moment from 'moment';
 
 @Injectable()
-export class SaveReportService {
-  save(reports) {
-    const date = moment().format('DD-MM-YYYY-HH:mm:ss');
-
-    const fileName = `report-${date}.xlsx`;
-
+export class WorkBookService {
+  create(reports) {
     const workbook = xlsx.utils.book_new();
     reports.forEach((item) => {
       const worksheet = xlsx.utils.json_to_sheet(item.content);
@@ -28,8 +23,7 @@ export class SaveReportService {
       ];
       xlsx.utils.book_append_sheet(workbook, worksheet, item.sheet);
     });
-    xlsx.writeFile(workbook, `./src/output/${fileName}`);
 
-    return fileName;
+    return workbook;
   }
 }

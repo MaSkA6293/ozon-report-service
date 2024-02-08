@@ -7,7 +7,7 @@ import { CurrencyService } from './services/currency.service';
 import { RealizationReportService } from './services/realization-report.service';
 import { ParseOrderService } from './services/parse-order.service';
 import { ContentService } from './services/content.service';
-import { SaveReportService } from './services/save-report.service';
+import { WorkBookService } from './services/work-book.service';
 
 @Module({
   imports: [HttpModule],
@@ -19,7 +19,7 @@ import { SaveReportService } from './services/save-report.service';
     RealizationReportService,
     ParseOrderService,
     ContentService,
-    SaveReportService,
+    WorkBookService,
   ],
 })
 export class ReportModule {}
