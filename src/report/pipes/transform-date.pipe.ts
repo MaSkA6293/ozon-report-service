@@ -4,6 +4,9 @@ import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 export class TransformDatePipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
     const [month, year] = value.reportDate.split('/');
-    return { reportDate: `${year}-${month}` };
+    return {
+      reportDate: `${year}-${month}`,
+      countries: JSON.parse(value.countries),
+    };
   }
 }

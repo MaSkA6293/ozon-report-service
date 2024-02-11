@@ -16,8 +16,6 @@ export interface ReportServiceCreate {
 
 @Injectable()
 export class ReportService {
-  countries = ['Армения', 'Кыргызстан', 'Казахстан', 'Беларусь'];
-
   constructor(
     private productService: ProductService,
     private currencyService: CurrencyService,
@@ -27,7 +25,11 @@ export class ReportService {
     private workBookService: WorkBookService,
   ) {}
 
-  async create({ fbo, fbs, report }: ReportServiceCreate, reportDate: string) {
+  async create(
+    { fbo, fbs, report }: ReportServiceCreate,
+    reportDate: string,
+    countries: string[],
+  ) {
     const realizationReport = this.realizationReportService.parse(report);
 
     const parseOrderService = await this.parseOrderService.parse(fbo, fbs);
@@ -45,7 +47,7 @@ export class ReportService {
         return acc;
       }, {}),
       map((data: any) => {
-        const reports = this.countries.map((countryName) => {
+        const reports = countries.map((countryName) => {
           return this.getReport(
             countryName,
             { fbo: data.fbo, fbs: data.fbs },

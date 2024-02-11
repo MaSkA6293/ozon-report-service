@@ -22,7 +22,7 @@ export class ReportController {
     ]),
   )
   create(
-    @Body(new TransformDatePipe()) createReportDto: CreateReportDto,
+    @Body(new TransformDatePipe()) { reportDate, countries }: CreateReportDto,
     @UploadedFiles()
     files: {
       fbo?: Express.Multer.File[];
@@ -30,6 +30,6 @@ export class ReportController {
       report?: Express.Multer.File[];
     },
   ) {
-    return this.reportService.create(files, createReportDto.reportDate);
+    return this.reportService.create(files, reportDate, countries);
   }
 }

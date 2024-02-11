@@ -6,4 +6,10 @@ export class CreateReportDto {
   })
   @IsString()
   reportDate: string;
+
+  @IsNotEmpty({
+    message: 'request body does not contain required fields',
+  })
+  @IsString()
+  countries: string[];
 }
